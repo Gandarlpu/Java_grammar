@@ -1,7 +1,12 @@
 package com;
 
-import java.util.*;
-class Main{
+import java.util.Scanner;
+
+public class C08_11 {
+    // 미로탐색
+    // 7,7
+    // 지나온길을 1로 바꾸면서 진행
+    // dx,dy를 i번째랑 조합해서 상하좌우를 조절
     static int[] dx = {-1,0,1,0};
     static int[] dy = {0,1,0,-1};
     static int[][] board;
@@ -25,9 +30,8 @@ class Main{
         }
     }
 
-
-    public static void main(String[] args){
-        Main A = new Main();
+    public static void main(String args[]){
+        C08_11 C = new C08_11();
         Scanner kb = new Scanner(System.in);
         board = new int[8][8];
         for(int i = 1 ; i <= 7 ; i++){
@@ -36,7 +40,9 @@ class Main{
             }
         }
         board[1][1] = 1;
-        A.DFS(1,1);
+        C.DFS(1,1);
         System.out.println(answer);
+
     }
+
 }

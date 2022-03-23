@@ -3,6 +3,7 @@ package com;
 import java.util.Scanner;
 
 public class C08_05 {
+    //중복순열
     static int n , m , answer = 0;
     static int[] pm;
 
@@ -18,7 +19,6 @@ public class C08_05 {
                 DFS(L+1);
             }
         }
-
     }
 
     public static void main(String args[]){
