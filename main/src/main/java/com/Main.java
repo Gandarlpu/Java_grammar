@@ -1,42 +1,62 @@
 package com;
 
 import java.util.*;
-class Main{
-    static int[] dx = {-1,0,1,0};
-    static int[] dy = {0,1,0,-1};
-    static int[][] board;
-    static int answer = 0;
 
-    public void DFS(int x , int y){
+class Point{
+    public int x , y;
+    Point(int x , int y){
+        this.x = x;
+        this.y = y;
+    }
+}
+public class Main {
+    static int n , m , len , answer = Integer.MAX_VALUE;
+    static int[] combi;
+    static ArrayList<Point> pz , hs;
 
-        if(x == 7 && y == 7){
-            answer++;
-        }else{
-            for(int i = 0 ; i < 4 ; i++){
-                int nx = x+dx[i];
-                int ny = y+dy[i];
-                // 경계선 확인
-                if(nx >= 1 && nx <= 7 && ny >= 1 && ny <= 7 && board[nx][ny] == 0){
-                    board[nx][ny] = 1;
-                    DFS(nx , ny);
-                    board[nx][ny] = 0;
+    public void DFS(int L , int s){
+
+        if(L == m){
+            int sum = 0;
+            for(Point h : hs){
+                int dis = Integer.MAX_VALUE;
+                for(int i : combi) {
+                    // 살아남은 피자집의 arrayIndex번호
+                    dis = Math.min(dis, Math.abs(h.x - pz.get(i).x) + Math.abs(h.y - pz.get(i).y));
                 }
+                sum += dis;
+                // 각 집들마다 피자집 거리가 계산되서 sum에 더해짐
+            }
+            answer = Math.min(answer , sum);
+        }else{
+            // 조합 알고리즘으로 0~5(피자집)를 조합해서 4개를 뽑는 경우의 수 2개는 폐점
+            for(int i = s; i < len ; i ++){
+                System.out.println("재귀 이전 값 : " + i);
+                combi[L] = i;
+                DFS(L+1 , i+1);
+                System.out.println(" 재귀 후 값 : "+i);
             }
         }
     }
 
-
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Main A = new Main();
         Scanner kb = new Scanner(System.in);
-        board = new int[8][8];
-        for(int i = 1 ; i <= 7 ; i++){
-            for(int j = 1 ; j <=7 ; j++){
-                board[i][j] = kb.nextInt();
+        n = kb.nextInt();
+        m = kb.nextInt();
+        pz = new ArrayList<>();
+        hs = new ArrayList<>();
+        for(int i = 0 ; i < n ; i ++){
+            for(int j = 0 ; j < n ; j ++){
+                int tmp = kb.nextInt();
+                if(tmp == 1) hs.add(new Point(i , j));
+                else if(tmp == 2) pz.add(new Point(i , j));
             }
         }
-        board[1][1] = 1;
-        A.DFS(1,1);
+        len = pz.size();
+        combi = new int[m];
+        A.DFS(0,0);
         System.out.println(answer);
+
     }
 }
