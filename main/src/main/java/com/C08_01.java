@@ -3,6 +3,7 @@ package com;
 import java.util.Scanner;
 
 class C08_01 {
+    // 합이 같은 부분집합
     static String answer = "NO";
     static int L , total = 0;
     static boolean flag = false;
@@ -11,7 +12,7 @@ class C08_01 {
         if(flag) return;
         if(sum > total) return;
         if(L == n) {
-            if(total/2 == sum){
+            if((total-sum) == sum){
                 answer = "YES";
                 flag = true;
             }
