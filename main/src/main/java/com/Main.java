@@ -1,17 +1,10 @@
 package com;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Scanner;
-import java.util.StringTokenizer;
+
+// 인접리스트로 그래프 그려야함
 
 class Edge implements Comparable<Edge>{
     public int vex;
@@ -23,62 +16,61 @@ class Edge implements Comparable<Edge>{
 
     @Override
     public int compareTo(Edge o) {
-        // cost오름차순
+        // 작은값 우선순위
         return this.cost - o.cost;
     }
 }
 
 public class Main {
-    static int n , m;
-    static ArrayList<ArrayList<Edge>> graph;
-    static int[] dis;
+    static int[] unf;
 
-    public void solution(int v){
-        PriorityQueue<Edge> pQ = new PriorityQueue<>();
-        pQ.offer(new Edge(v , 0));
-        dis[v] = 0;
-        while(!pQ.isEmpty()){
-            Edge tmp = pQ.poll();
-            int now = tmp.vex;
-            int nowCost = tmp.cost;
+    public static int Find(int v){
+        if(v == unf[v]) return v;
+        else return unf[v] = Find(unf[v]);
+    }
 
-            if(nowCost > dis[now]) continue;
-
-            for(Edge ob : graph.get(now)){
-                // 1번(now)와 연결된 정점들의 비용을 비교
-                // ob.vex = now에서 이동할 노드의 숫자
-                if(dis[ob.vex] > nowCost+ob.cost){
-                    dis[ob.vex] = nowCost+ob.cost;
-                    pQ.offer(new Edge(ob.vex , nowCost+ob.cost));
-                }
-            }
-        }
+    public static void Union(int a , int b){
+        int fa = Find(a);
+        int fb = Find(b);
+        if(fa != fb) unf[fa] = fb;
     }
 
     public static void main(String[] args) {
         Main A = new Main();
         Scanner kb = new Scanner(System.in);
-        n = kb.nextInt();
-        m = kb.nextInt();
-        graph = new ArrayList<ArrayList<Edge>>();
-        // graph라는 ArrayList안에 ArrayList<Edge>객체를 생성
-        // Edge라는 클래스 객체를 저장할 수 있는 ArrayList
-
+        int n = kb.nextInt();
+        int m = kb.nextInt();
+        ArrayList<ArrayList<Edge>> graph = new ArrayList<ArrayList<Edge>>();
         for(int i = 0 ; i <= n ; i ++){
             graph.add(new ArrayList<Edge>());
         }
-        dis = new int[n+1];
-        Arrays.fill(dis, Integer.MAX_VALUE);
+        int[] ch = new int[n+1];
         for(int i = 0 ; i < m ; i ++){
             int a = kb.nextInt();
             int b = kb.nextInt();
             int c = kb.nextInt();
-            graph.get(a).add(new Edge(b , c));
+            // 무방향이라서 a->b b->a 2가지로 갈 수 있어야 한다.
+            graph.get(a).add(new Edge(b,c));
+            graph.get(b).add(new Edge(a,c));
         }
-        A.solution(1);
-        for(int i = 2; i <= n ; i ++){
-            if(dis[i] != Integer.MAX_VALUE) System.out.println(i+" : "+dis[i]);
-            else System.out.println(i+" : impossible");
+        int answer = 0;
+        PriorityQueue<Edge> pQ = new PriorityQueue<>();
+        pQ.offer(new Edge(1,0));
+        while(!pQ.isEmpty()){
+            Edge tmp = pQ.poll();
+            int ev = tmp.vex; // 도착 정점
+
+            if(ch[ev] == 0){
+                // 도착정점이 비어있으면
+                ch[ev] = 1;
+                answer += tmp.cost;
+                for(Edge ob : graph.get(ev)){
+                    // ev노드(도착정점)가 새로 갈 수 있는 모든 간선들의 노드와 비용 새로 추가
+                   if(ch[ob.vex] == 0) pQ.offer(new Edge(ob.vex , ob.cost));
+                }
+            }
         }
+
+        System.out.println(answer);
     }
 }
