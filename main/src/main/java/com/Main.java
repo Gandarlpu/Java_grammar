@@ -1,38 +1,49 @@
 package com;
 
-import java.util.Scanner;
+import java.util.*;
 
-// 다이나믹 프로그래밍
-// 최대부분증가수열
+class Body implements Comparable<Body>{
+    public int h , w;
+    Body(int h , int w){
+        this.h = h;
+        this.w = w;
+    }
+    @Override
+    public int compareTo(Body o) {
+        return o.h - this.h;
+    }
+}
 
-class Main{
-    static int[] dy;
-    public int solution(int n , int[] arr){
-        int answer = 0;
-        dy[0] = 1;
-        for(int i = 1 ; i < n ; i ++){
-            int max = 0;
-            for(int j = i-1 ; j >= 0 ; j--){
-                if(arr[i] > arr[j] && dy[j] > max){
-                    max = dy[j];
-                }
+public class Main {
+
+    public int solution(ArrayList<Body> arr , int n){
+        int cnt = 0;
+        Collections.sort(arr);
+        int max = Integer.MIN_VALUE;
+
+        for(Body ob : arr){
+            System.out.print(ob.w+" "+ob.h);
+            System.out.println();
+            // 키 정렬된 곳에서 몸무게만 비교
+            if(ob.w > max){
+                max = ob.w;
+                cnt++;
             }
-            dy[i] = max+1;
-            answer = Math.max(answer , dy[i]);
         }
-        return answer;
+
+        return cnt;
     }
 
-    public static void main(String[] args){
-        Main T = new Main();
+    public static void main(String[] args) {
+        Main A = new Main();
         Scanner kb = new Scanner(System.in);
         int n = kb.nextInt();
-        int[] arr = new int[n];
-        dy = new int[n];
+        ArrayList<Body> arr = new ArrayList<>();
         for(int i = 0 ; i < n ; i ++){
-            arr[i] = kb.nextInt();
+            int h = kb.nextInt();
+            int w = kb.nextInt();
+            arr.add(new Body(h , w));
         }
-
-        System.out.print(T.solution(n , arr));
+        System.out.println(A.solution(arr, n));
     }
 }
