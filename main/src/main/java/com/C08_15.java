@@ -16,7 +16,8 @@
 //            int nx = x + dx[i];
 //            int ny = y + dy[i];
 //
-//            if(nx >= 0 && nx < n && ny >= 0 && ny < n && board[nx][ny] == 1){
+//            if(nx >= 0 && nx < n && ny >= 0 && ny < n
+//                  && board[nx][ny] == 1){
 //                board[nx][ny] = 0;
 //                DFS(nx , ny , board);
 //            }
